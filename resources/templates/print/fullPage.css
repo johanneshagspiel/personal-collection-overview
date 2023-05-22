@@ -1,0 +1,95 @@
+@font-face {
+  font-family: regularFont;
+  src: url("C:/Users/Johannes/Desktop/programs/personal_projects/personal-collection-overview/resources/font/Nunito-Regular.ttf");
+}
+
+@font-face {
+  font-family: boldFont;
+  src: url("C:/Users/Johannes/Desktop/programs/personal_projects/personal-collection-overview/resources/font/Nunito-Bold.ttf");
+}
+
+@font-face {
+  font-family: fineFont;
+  src: url("C:/Users/Johannes/Desktop/programs/personal_projects/personal-collection-overview/resources/font/Nunito-Light.ttf");
+}
+
+@page portrait {
+    size: A4;
+    margin-left: 3cm;
+}
+
+@page {
+    @bottom-left {
+       content: element(left-bottom-element);
+    }
+
+    @bottom-center {
+       content: element(center-bottom-element);
+    }
+
+    @bottom-right {
+       content: element(right-bottom-element);
+    }
+}
+
+h1 {
+    font-size: 2em;
+    font-family: boldFont;
+    vertical-align: middle;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    font-family: boldFont;
+}
+
+td, p {
+    font-family: regularFont;
+ }
+
+.image-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.grey {
+    color: #888888;
+}
+
+.bold {
+    font-family: boldFont;
+}
+
+.left-element {
+    position: running(left-bottom-element);
+    font-family: fineFont;
+    text-align: left;
+}
+
+.center-element {
+    position: running(center-bottom-element);
+    font-family: fineFont;
+    text-align: center;
+}
+
+.right-element {
+    position: running(right-bottom-element);
+    font-family: fineFont;
+    text-align: right;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+}
+
+.footer-th {
+    font-family: fineFont;
+    font-size: medium;
+}

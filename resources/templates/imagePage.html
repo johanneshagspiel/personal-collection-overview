@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+  <body>
+        {% if image_format_str != "no" %}
+          <img src= "{{ image_path }}" height="{{ height }}" width="{{ width }}" class="image-center">
+        {% endif %}
+
+      <div class="left-element"> {{ artist }}, {{ title }} </div>
+      <div class="right-element"> {{ inventory_number }} </div>
+
+  </body>
+</html>

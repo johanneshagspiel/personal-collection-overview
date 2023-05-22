@@ -1,0 +1,39 @@
+@font-face {
+  font-family: fineFont;
+  src: url("C:/Users/Johannes/Desktop/programs/personal_projects/personal-collection-overview/resources/font/Nunito-Light.ttf");
+}
+
+@page portrait {
+    size: A4;
+    margin-left: 3cm;
+}
+
+@page {
+    @bottom-left {
+       content: element(left-bottom-element);
+    }
+
+    @bottom-right {
+       content: element(right-bottom-element);
+    }
+}
+
+.image-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.left-element {
+    position: running(left-bottom-element);
+    font-family: fineFont;
+    text-align: left;
+}
+
+.right-element {
+    position: running(right-bottom-element);
+    font-family: fineFont;
+    text-align: right;
+}

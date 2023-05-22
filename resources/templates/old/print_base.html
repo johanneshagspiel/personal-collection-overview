@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" href="{{ css_path }}"/>
+    </head>
+    <body>
+        <div class="container">
+            <div class="content-container">
+                <div class="header">
+                    <div>
+                        <span class="grey">{{ artist }}</span> - {{ title }}
+                    </div>
+                </div>
+
+                {% if image_format_str != "no" %}
+
+                    <img src= "{{ image_path }}" height="{{ height }}" width="{{ width }}" class="image-center">
+
+                {% endif %}
+
+                <div class="row">
+                    <div class="empty-column"></div>
+                    <div class="column">
+                        <p><strong>Lfd. N.:</strong> {{ id }}</p>
+                        <p><strong>Ab.N.:</strong> {{ location }}</p>
+                        <p><b>Ken-1:</b> {{ ken_1 }}</p>
+                        <p><b>K-2:</b> {{ ken_2 }}</p>
+                        <p><b>Anz.:</b> {{ count }}</p>
+                        <p><b>Serie:</b> {{ series }}</p>
+                        <p><b>Künstler:</b> {{ artist }}</p>
+                        <p><b>Land:</b> {{ country }}</p>
+                        <p><b>Technik / Anzahl Einzelstücke:</b> {{ technique_count }}</p>
+                        <p><b>Materialart / Papierart/-qualität:</b> {{ material }}</p>
+                        <p><b>Produktion (Hersteller / Drucker):</b> {{ production }}</p>
+                        <p><b>Rahmen:</b> {{ frame }} </p>
+                    </div>
+                    <div class="column">
+                        <p><b>Größe (Br/Hö):</b> {{ size }}</p>
+                        <p><b>Auflage:</b> {{ edition }} </p>
+                        <p><b>Auflage AP / PP:</b> {{ edition_pp }} </p>
+                        <p><b>Auflage Total:</b> {{ edition_total }}</p>
+                        <p><b>Num.:</b> {{ number }}</p>
+                        <p><b>Signatur / Nummer.:</b> {{ signature }}</p>
+                        <p><b>Zertif.:</b> {{ certificate }}</p>
+                        <p><b>Preis:</b> {{ price }}</p>
+                        <p><b>Verkäufer:</b> {{ seller }}</p>
+                        <p><b>Kaufdatum:</b> {{ sale_month }} </p>
+                        <p><b>Sonstiges:</b> {{ miscellaneous }} </p>
+                    </div>
+                    <div class="empty-column"></div>
+                </div>
+
+                <footer>
+                    Seite {{ page_count }} von {{ page_total }}
+                </footer>
+
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" href="{{ css_path }}"/>
+    </head>
+    <body>
+
+      <h1>
+        <span class="grey">{{ artist }}</span> - {{ title }}
+      </h1>
+        <br>
+
+      {% if image_format_str != "no" %}
+        <img src= "{{ image_path }}" height="{{ height }}" width="{{ width }}" class="image-center">
+        <br>
+      {% endif %}
+
+      <table>
+        <tr>
+          <th> Künstler </th>
+          <td> {{ artist }} </td>
+          <th> Auflage </th>
+          <td> {{ edition }} </td>
+        </tr>
+        <tr>
+          <th> Titel </th>
+          <td> {{ title }} </td>
+          <th> Nummer </th>
+          <td> {{ number }} </td>
+        </tr>
+        <tr>
+          <th> Technik/<br>Gattung </th>
+          <td> {{ technique }} </td>
+          <th> Verkäufer </th>
+          <td> {{ seller }} </td>
+        </tr>
+        <tr>
+          <th> Papier/<br>Material </th>
+          <td> {{ material }} </td>
+          <th> Kaufdatum </th>
+          <td> {{ sale_month }} </td>
+        </tr>
+        <tr>
+          <th> Drucker/<br>Hersteller </th>
+          <td> {{ production }} </td>
+          <th> Preis </th>
+          <td> {{ price }} </td>
+        </tr>
+        <tr>
+          <th> Maße </th>
+          <td> {{ size }} </td>
+          <th> Inventar-<br>nummer </th>
+          <td> {{ inventory_number }} </td>
+        </tr>
+        <tr>
+          <th> Anzahl </th>
+          <td> {{ count }} </td>
+          <th> Lagerort </th>
+          <td> {{ location }} </td>
+        </tr>
+    </table>
+
+    <p>
+      <span class="bold">Sonstiges:</span> {{ miscellaneous }}
+    </p>
+
+    <div class="left-element"> Druckdatum: {{ print_date }} </div>
+    <div class="center-element"> Lfd. Nr. {{ id }} </div>
+    <div class="right-element"> Inventarnummer {{ inventory_number }} </div>
+
+    </body>
+</html>

@@ -1,0 +1,115 @@
+
+@page portrait {
+    size: A4;
+    margin-left: 3cm;
+}
+
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    min-width: 210mm;
+    max-width: 210mm;
+    min-height: 297mm;
+    max-height: 297mm;
+    margin: 0mm;
+}
+
+h1 {
+    text-align: center;
+    flex-grow: 1;
+}
+
+footer {
+    color: #888888;
+    margin: auto;
+    width: 50%;
+
+    display: table-cell;
+
+    text-align: center;
+    flex-grow: 1;
+}
+
+.container {
+    min-width: 210mm;
+    max-width: 210mm;
+    min-height: 297mm;
+    max-height: 297mm;
+    display: flex;
+    flex-direction: row;
+}
+
+.left-bar {
+    min-width: 30mm;
+    max-width: 30mm;
+    min-height: 297mm;
+    max-height: 297mm;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-container {
+    min-width: 180mm;
+    max-width: 180mm;
+    min-height: 297mm;
+    max-height: 297mm;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    font-size: 2em;
+    vertical-align: middle;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.image-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    flex-grow: 1;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.column {
+    float: left;
+    width: 35%;
+    flex-grow: 1;
+}
+
+.empty-column {
+    float: left;
+    width: 15%;
+    flex-grow: 2;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.stretch {
+    flex-grow: 2;
+}
+
+.grey {
+    color: #888888
+}

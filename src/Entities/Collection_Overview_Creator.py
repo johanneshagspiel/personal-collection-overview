@@ -1,3 +1,6 @@
+import collections
+import csv
+import os
 from pathlib import Path
 from PyPDF2 import PdfMerger
 from openpyxl import load_workbook
@@ -12,15 +15,30 @@ class Collection_Overview_Creator:
     def create_collection_overview(file_path_list):
 
         root_path = Path(__file__).parents[2]
-        pdf_folder_path = root_path.joinpath("resources", "individual_pdfs")
-        html_folder_path = root_path.joinpath("resources", "individual_htmls")
+
+        website_individual_html_folder_path = root_path.joinpath("resources", "website", "individual_htmls")
+
+        print_full_page_html_folder_path = root_path.joinpath("resources", "print", "full_page")
+        print_image_page_html_folder_path = root_path.joinpath("resources", "print", "image_page")
+
         final_pdf_file_path = root_path.joinpath("resources", "Sammlungs_Katalog_2022.pdf")
         image_folder_path = root_path.joinpath("resources", "images")
 
+        missing_images_csv_path = root_path.joinpath("resources", "cleaning_info", "missing_images.csv")
+        artists_csv_path = root_path.joinpath("resources", "cleaning_info", "artists.csv")
+        long_title_path = root_path.joinpath("resources", "cleaning_info", "long_title.csv")
+
         art_count = 1
-        collectionEntryList = []
+        individual_artworks_list = []
+        artist_artwork_dic = collections.defaultdict(list)
+
+        no_image_list = []
+        artists_dic = {}
+        long_title_list = []
 
         for file_index, file_path in enumerate(file_path_list):
+
+            file_name = os.path.basename(file_path)
 
             wb = load_workbook(file_path, data_only=True)
             sheet = wb['KUNSTW_20_B']
@@ -33,6 +51,8 @@ class Collection_Overview_Creator:
 
             row_count = 0
             keep_going = True
+
+            artist_information = []
 
             for row in sheet.iter_rows():
 
@@ -50,22 +70,41 @@ class Collection_Overview_Creator:
 
                     try:
                         hoch_image = image_loader.get(hochformat)
+                        if hoch_image.mode != 'RGB':
+                            hoch_image = hoch_image.convert('RGB')
                         hoch_image.save(image_file_path)
                         image_format = "hoch"
                         image_path = image_file_path
                     except Exception as e:
+                        error_message = str(e)
+                        if "doesn't contain an image" not in error_message:
+                            print(f"Hoch error - {e}")
                         try:
                             quer_image = image_loader.get(querformat)
+                            if quer_image.mode != 'RGB':
+                                quer_image = quer_image.convert('RGB')
                             quer_image.save(image_file_path)
                             image_format = "quer"
                             image_path = image_file_path
                         except Exception as e:
+                            error_message = str(e)
+                            if "doesn't contain an image" not in error_message:
+                                print(f"Quer error - {e}")
                             try:
                                 quadratisch_image = image_loader.get(quadratisch)
+                                if quadratisch_image.mode != 'RGB':
+                                    quadratisch_image = quadratisch_image.convert('RGB')
                                 quadratisch_image.save(image_file_path)
                                 image_format = "quad"
                                 image_path = image_file_path
                             except Exception as e:
+                                error_message = str(e)
+                                if "doesn't contain an image" not in error_message:
+                                    print(f"Quad error - {e}")
+
+                                print(f"Row {row_count + 1}: No image")
+                                no_image_list.append((row_count + 1, file_name))
+
                                 image_format = "no"
                                 image_path = "no"
 
@@ -138,36 +177,73 @@ class Collection_Overview_Creator:
                                                               edition_pp, edition_total, number, signature, certificate,
                                                               price,
                                                               seller, sale_month, sale_year, miscellaneous)
-                        collectionEntryList.append(newCollectionEntry)
+                        individual_artworks_list.append(newCollectionEntry)
+
+                        artist_artwork_dic[artist].append((art_count, title, image_path))
+
+                        if artist not in artists_dic:
+                            artists_dic[artist] = {}
+                        if "file" not in artists_dic[artist]:
+                            artists_dic[artist]["file"] = file_name
+                        if "rows" not in artists_dic[artist]:
+                            artists_dic[artist]["rows"] = []
+
+                        artists_dic[artist]["rows"].append(row_count + 1)
+
+                        if title and len(str(title)) > 10:
+                            long_title_list.append((title, row_count + 1, file_name))
+
                         art_count += 1
 
                 row_count += 1
 
-        stop_end = 3
-        merger = PdfMerger()
-        for count, collectionEntry in enumerate(collectionEntryList):
-            print_string = str(count + 1) + "/" + str(len(collectionEntryList))
+
+        with open(missing_images_csv_path, 'w', newline='', encoding='utf-8') as missing_images_csv_file:
+            writer = csv.DictWriter(missing_images_csv_file, fieldnames=["row", "file"])
+            writer.writeheader()
+            for row, file in no_image_list:
+                csv_dic = {}
+                csv_dic["row"] = str(row)
+                csv_dic["file"] = str(file)
+                writer.writerow(csv_dic)
+
+        with open(artists_csv_path, 'w', newline='', encoding='utf-8') as artist_csv_file:
+            writer = csv.DictWriter(artist_csv_file, fieldnames=["artist", "file", "rows"])
+            writer.writeheader()
+            for artist, info_dic in artists_dic.items():
+                csv_dic = {}
+                csv_dic["artist"] = str(artist)
+                csv_dic["file"] = str(info_dic["file"])
+                csv_dic["rows"] = "_".join([str(x) for x in info_dic["rows"]])
+                writer.writerow(csv_dic)
+
+        with open(long_title_path, 'w', newline='', encoding='utf-8') as long_title_csv_file:
+            writer = csv.DictWriter(long_title_csv_file, fieldnames=["title", "row", "file"])
+            writer.writeheader()
+            for title, row, file in long_title_list:
+                csv_dic = {}
+                csv_dic["title"] = str(title)
+                csv_dic["row"] = str(row)
+                csv_dic["file"] = str(file)
+                writer.writerow(csv_dic)
+
+        for count, collectionEntry in enumerate(individual_artworks_list):
+            print_string = str(count + 1) + "/" + str(len(individual_artworks_list))
             print(print_string)
 
-            pdf_file_name = str(count + 1) + ".pdf"
-            pdf_file_path = str(pdf_folder_path) + "\\" + pdf_file_name
+            print_full_page_file_name = str(count + 1) + ".html"
+            print_full_page_file_path = str(print_full_page_html_folder_path) + "\\" + print_full_page_file_name
 
-            html_file_name = str(count + 1) + ".html"
-            html_file_path = str(html_folder_path) + "\\" + html_file_name
+            print_full_page_html_string = Template_Factory.create_print_full_page(collectionEntry=collectionEntry)
+            with open(print_full_page_file_path, "w", encoding="utf-8") as print_full_page_html_file:
+                print_full_page_html_file.write(print_full_page_html_string)
+            print_full_page_html_file.close()
 
-            html_string = Template_Factory.create_template(collectionEntry, count + 1, len(collectionEntryList))
 
-            with open(html_file_path, "w", encoding="utf-8") as html_file:
-                html_file.write(html_string)
-            html_file.close()
+            print_image_page_file_name = str(count + 1) + ".html"
+            print_image_page_file_path = str(print_image_page_html_folder_path) + "\\" + print_image_page_file_name
 
-            from_string(html_string, output_path=pdf_file_path, options={"enable-local-file-access": ""})
-
-            merger.append(pdf_file_path)
-
-            # if count == stop_end:
-            #     break
-
-        merger.write(final_pdf_file_path)
-        merger.close()
-
+            print_image_page_html_string = Template_Factory.create_print_image_page(collectionEntry=collectionEntry)
+            with open(print_image_page_file_path, "w", encoding="utf-8") as print_image_page_html_file:
+                print_image_page_html_file.write(print_image_page_html_string)
+            print_image_page_html_file.close()
